@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Subscribed!{% endblock %}
+{% block content %}
+  <section class="section">
+    <h2 style="color:var(--omi-neon-pink)">Thank You!</h2>
+    <p style="color:var(--omi-text-strong);">
+      {{ email }} has been added to our newsletter.
+    </p>
+    <a href="{% url 'pages:home' %}" class="button" style="background:var(--omi-neon-blue);">
+      Back to Home
+    </a>
+  </section>
+{% endblock %}

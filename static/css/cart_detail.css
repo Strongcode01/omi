@@ -1,0 +1,15 @@
+/* .container table { background:#270f26; 
+}
+td, th { padding:2rem; 
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+.center-box {
+    width: 300px;
+    height: 200px;
+    background-color: #270f26;
+} */

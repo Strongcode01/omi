@@ -1,0 +1,634 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <style>
+    /* Home page specific */
+    .slider {
+      position: relative;
+      overflow: hidden;
+      height: 70vh;
+      background: var(--omi-dark-bg);
+      
+    }
+    .slide-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  .slide-img {
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+    flex: 1;
+    padding: 2rem 0 1rem 3rem;
+    margin: 1rem 0 0 1rem;
+    
+  }
+  .slide-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 10px;
+  }
+  .slide-content {
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3));
+    color: var(--omi-text-strong);
+  }
+  .slide-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: none;
+    font-family: league-spartan;
+    
+  }
+  .slide-content p {
+    font-size: 1.125rem;
+    margin-bottom: 2.5rem;
+  }
+  .btn-omi {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--omi-button);
+    color: var(--omi-text-strong);
+    border: 0.4px solid var(--omi-neon-blue);
+    border-radius: 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .btn-omi:hover {
+    background: var(--omi-neon-blue);
+    border-color: var(--omi-neon-pink);
+  }
+  /* Swiper overrides */
+  .swiper-pagination-bullet {
+    background: var(--omi-neon-blue);
+    opacity: 0.7;
+  }
+  .swiper-pagination-bullet-active {
+    background: var(--omi-neon-pink);
+    opacity: 1;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: var(--omi-neon-blue);
+    font-size: 24px;
+    justify-self: center;
+    align-self: center;
+  }
+  .swiper-button-prev:hover,
+  .swiper-button-next:hover {
+    color: var(--omi-button);
+  }
+
+    .section {
+      padding: 4rem 1rem;
+      text-align: center;
+    }
+    .section h2 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 2rem;
+      text-shadow: 0 0 8px var(--omi-neon-pink);
+    }
+
+    /* Categories grid */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 1.5rem;
+    }
+    .category-card {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      padding: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 12px var(--omi-neon-blue);
+    }
+    .category-card img {
+      width: 80px;
+      margin-bottom: 1rem;
+    }
+    .category-card p {
+      color: var(--omi-text-strong);
+      font-weight: bold;
+    }
+
+    /* Featured products grid */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 2rem;
+    }
+
+    /* Services list */
+    .services {
+      display: grid;
+      flex-wrap: wrap;
+      gap: 3rem;
+      justify-content: center;
+      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      margin: 0 1rem 0 1rem;
+      
+    }
+    .service-card {
+      background: var(--omi-button);
+      padding: 2rem;
+      border-radius: 8px;
+      width: 240px;
+      box-shadow: 0 0 10px var(--omi-d-neon-pink);
+      transition: transform 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+    .service-card img {
+      width: 60px;
+      margin-bottom: 1rem;
+    }
+    .service-card h3 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 0.5rem;
+    }
+    .service-card p {
+      color: var(--omi-text-strong);
+      font-size: 0.9rem;
+    }
+
+    /* Testimonials Slider */
+    .testimonial-slider { 
+      overflow: scroll; 
+      padding:2rem 0; 
+      background:var(--omi-d-blue); 
+
+    }
+
+    .testimonial-slides {
+      display:flex; 
+      gap:2rem; 
+      margin: 1rem 2rem 1rem 2rem;
+    }
+
+    /* Mobile: one card per view */
+    @media (max-width:768px) {
+      .testimonial-slides { 
+        gap: 1rem; 
+        justify-content: center;
+      }
+    .testimonial-card { flex:0 0 100%; }
+    }
+
+    /* Scale up the second child (center card) */
+    .testimonial-slides .testimonial-card:nth-child(2) {
+        transform: scale(1.1);
+        z-index: 1; /* bring above neighbors */
+        transition: transform 0.3s ease;
+      }
+      /* Slightly dim the neighbors */
+      .testimonial-slides .testimonial-card:not(:nth-child(2)) {
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+    .testimonial-card {
+      flex: 0 0 280px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+    }
+    .testimonial-card img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 2px solid var(--omi-neon-pink);
+      box-shadow: 0 0 6px var(--omi-neon-pink);
+    }
+    .testimonial-card p.text {
+      font-style: normal;
+      color: var(--omi-text-strong);
+      margin-bottom: 1rem;
+    }
+    .testimonial-card p.meta {
+      font-weight: bold;
+      color: var(--omi-neon-pink);
+      margin: 0;
+    }
+
+    /* Pause on hover */
+    .testimonial-slider:hover .testimonial-slides {
+      animation-play-state: paused;
+    }
+    .testimonial-slides:hover .testimonial-card {
+        opacity: 0.8;
+      }
+      .testimonial-slides:hover .testimonial-card:hover {
+        transform: scale(1.1);
+        opacity: 1;
+        z-index: 1;
+      }
+    /* Contact form */
+    .contact-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.6);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--omi-neon-blue);
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--omi-d-blue);
+      border-radius: 4px;
+      background: #111;
+      color: var(--omi-text-strong);
+    }
+    .contact-form button {
+      background: var(--omi-neon-pink);
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 8px var(--omi-neon-pink);
+    }
+    /* Popup overlay (hidden by default) */
+    #send-popup-overlay {
+      position: fixed;
+      inset: 0;                                    /* top:0; right:0; bottom:0; left:0; */
+      background: rgba(0, 0, 0, 0.6);
+      display: none;                              /* shown when sent=True */
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 1rem;
+    }
+    #send-popup-overlay.open {
+      display: flex;
+    }
+    #send-popup {
+      background: var(--omi-dark-bg);
+      border: 2px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+      color: var(--omi-text-strong);
+    }
+    #send-popup h3 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 6px var(--omi-neon-pink);
+    }
+    #send-popup button {
+      background: var(--omi-neon-blue);
+      color: #000;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 6px var(--omi-neon-blue);
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    #send-popup button:hover {
+      background: var(--omi-neon-pink);
+      box-shadow: 0 0 8px var(--omi-neon-pink);
+      transform: translateY(-2px);
+    }
+  </style>
+{% endblock %}
+
+{% block title %}Home | Optimal Market Innovations{% endblock %}
+
+{% block content %}
+  <div id="send-popup-overlay" class="{% if sent %}open{% endif %}">
+    <div id="send-popup">
+      <h3>Thank You!</h3>
+      <p>Your message has been sent successfully.</p>
+      <button id="send-popup-close">x</button>
+    </div>
+  </div>
+  <!-- Slider Section -->
+  <section class="slider">
+    <div class="omi-hero-slider swiper-container">
+    <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+            <div class="slide-inner">
+                <div class="slide-img">
+                <img src="{% static 'images/slide1.jpg' %}" alt="Slide 1" />
+                </div>
+                <div class="slide-content">
+                <h2>Innovate Your Future</h2>
+                <p>Cutting‑edge solutions for modern businesses.</p>
+                <a href="#services" class="btn-omi">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="swiper-slide">
+            <div class="slide-inner">
+                <div class="slide-img">
+                <img src="{% static 'images/slide2.jpeg' %}" alt="Slide 2" />
+                </div>
+                <div class="slide-content">
+                <h2>Optimal Market Innovations</h2>
+                <p>Marketing strategies that scale with you.</p>
+                <a href="#contact" class="btn-omi">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="swiper-slide">
+            <div class="slide-inner">
+                <div class="slide-img">
+                <img src="{% static 'images/slide3.jpg' %}" alt="Slide 3" />
+                </div>
+                <div class="slide-content">
+                <h2>Grow Your Reach</h2>
+                <p>Marketing strategies that scale with you.</p>
+                <a href="#contact" class="btn-omi">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Swiper Pagination & Navigation -->
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+
+  </section>
+
+  <!-- Search bar -->
+  <section class="section" style="background: var(--omi-d-blue);">
+    <form method="get" action="{% url 'products:product_list' %}" style="
+        display: block; max-width:500px; margin:0 auto 3rem; gap:0.5rem; float: right;
+    ">
+      <input
+        type="text" name="q"
+        placeholder="Search our marketplace..."
+        style="
+          flex:1;
+          padding:0.75rem;
+          border:1px solid var(--omi-neon-blue);
+          border-radius:4px;
+          background:#111;
+          color:var(--omi-text-strong);
+        ">
+      <button type="submit" style="
+          background:var(--omi-neon-blue);
+          border:none;
+          padding:0.75rem 1.5rem;
+          border-radius:4px;
+          color:#000;
+          box-shadow:0 0 8px var(--omi-neon-blue);
+        ">
+        Search Products
+      </button>
+    </form>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section">
+    <h2>Shop by Category</h2>
+    <div class="categories">
+      {% comment %} Replace with dynamic categories {% endcomment %}
+      <div class="category-card">
+        <img src="{% static 'images/fish-icon.png' %}" alt="Fish">
+        <p>Fish Products</p>
+      </div>
+      <div class="category-card">
+        <img src="{% static 'images/livestock-icon.png' %}" alt="Livestock">
+        <p>Livestock</p>
+      </div>
+      <div class="category-card">
+        <img src="{% static 'images/feed-icon.png' %}" alt="Feed">
+        <p>Feeds & Supplements</p>
+      </div>
+      <div class="category-card">
+        <img src="{% static 'images/diagnostics-icon.png' %}" alt="Diagnostics">
+        <p>PCR Diagnostics</p>
+      </div>
+    </div>
+    <a href="{% url 'products:product_list' %}" class="button" style="
+      margin-top:2rem; background:var(--omi-neon-blue);
+      box-shadow:0 0 8px var(--omi-neon-blue);
+      color:#000;
+    ">View All Products</a>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section" style="background: var(--omi-dark-bg);">
+    <h2>Featured Products</h2>
+    <div class="featured-grid">
+      {% for product in products|slice:":4" %}
+        <div class="category-card">
+          <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width:100%; height:160px; object-fit:cover; border-radius:4px;">
+          <p>{{ product.title }}</p>
+          <p style="color:var(--omi-neon-pink);">₦{{ product.price }}</p>
+        </div>
+      {% endfor %}
+    </div>
+    <a href="{% url 'products:product_list' %}" class="button" style="
+      margin-top:2rem; background:var(--omi-neon-pink);
+      box-shadow:0 0 8px var(--omi-neon-pink);
+      color:#000;
+    ">See More</a>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section">
+    <h2>Our Services</h2>
+    <div class="services">
+      <div class="service-card">
+        <img src="{% static 'images/shipping-icon.png' %}" alt="Shipping">
+        <h3>Fast Delivery</h3>
+        <p>Same-day pickup & delivery across Nigeria.</p>
+      </div>
+      <div class="service-card">
+        <img src="{% static 'images/live-support-icon.png' %}" alt="Support">
+        <h3>24/7 Support</h3>
+        <p>AI-powered chat & human agents on standby.</p>
+      </div>
+      <div class="service-card">
+        <img src="{% static 'images/analytics-icon.png' %}" alt="Analytics">
+        <h3>Data Analytics</h3>
+        <p>Premium dashboard & insights for subscribers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+<section class="testimonial-slider">
+  <h2 style="color:var(--omi-neon-pink); text-shadow:0 0 8px var(--omi-neon-pink); text-align:center;">
+    What Our Clients Say
+  </h2>
+  <div style="position:relative;">
+    <!-- Slides container -->
+    <div class="testimonial-slides">
+      {% for t in testimonials %}
+        <div class="testimonial-card">
+          <img src="{% static 'images/avatar'|add:forloop.counter|stringformat:'i'|add:'.png' %}"
+               alt="{{ t.user }} avatar">
+          <p class="text">“{{ t.text }}”</p>
+          <p class="meta">– {{ t.user }}, <span style="font-weight:normal; color:var(--omi-text-strong);">{{ t.role }}</span></p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Manual controls -->
+    <button id="testi-prev" style="
+        position:absolute; top:50%; left:0.5rem;
+        background:rgba(0,0,0,0.5); border:none; 
+        color:var(--omi-text-strong); font-size:2rem; 
+        padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;
+      ">&lsaquo;</button>
+    <button id="testi-next" style="
+        position:absolute; top:50%; right:0.5rem;
+        background:rgba(0,0,0,0.5); border:none; 
+        color:var(--omi-text-strong); font-size:2rem; 
+        padding:0.2rem 0.5rem; border-radius:4px; cursor:pointer;
+      ">&rsaquo;</button>
+  </div>
+</section>
+
+  <!-- FAQs Section -->
+  <section class="section">
+    <h2>Frequently Asked Questions</h2>
+    <div style="
+      max-width:800px;
+      margin:0 auto;
+      text-align:left;
+    ">
+      {% for f in faqs %}
+        <div style="
+          margin-bottom:1.5rem;
+          border-left:4px solid var(--omi-neon-pink);
+          padding-left:1rem;
+        ">
+          <p style="font-weight:bold; color:var(--omi-neon-pink);">
+            Q: {{ f.q }}
+          </p>
+          <p style="color:var(--omi-text-strong);">
+            A: {{ f.a }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Contact Section (Homepage “Send Message” form) -->
+  <section class="section" id="send_message" style="background:var(--omi-d-blue);">
+    <h2>Get in Touch</h2>
+    {% if request.GET.sent %}
+      <!-- Show a temporary success alert if ?sent=1 -->
+      <div style="
+        background: var(--omi-neon-blue); 
+        color: #000; 
+        padding: 1rem; 
+        border-radius: 6px; 
+        text-align: center; 
+        margin-bottom: 1rem;
+        box-shadow: 0 0 8px var(--omi-neon-blue);
+      ">
+        Thank you! Your message has been sent.
+      </div>
+    {% endif %}
+    <form action="{% url 'pages:send_message' %}" method="post" class="contact-form">
+      {% csrf_token %}
+      {{ send_message_form.non_field_errors }}
+      <div>
+        {{ send_message_form.name }}
+        {% for error in send_message_form.name.errors %}
+          <div style="color:#ff135d;">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ send_message_form.email }}
+        {% for error in send_message_form.email.errors %}
+          <div style="color:#ff135d;">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ send_message_form.message }}
+        {% for error in send_message_form.message.errors %}
+          <div style="color:#ff135d;">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit">
+        Send Message
+      </button>
+    </form>
+  </section>
+
+  <form method="post" action="{% url 'pages:newsletter' %}" class="newsletter-form">
+    {% csrf_token %}
+    {{ newsletter_form.email }}
+    <button type="submit">Subscribe</button>
+    {{ newsletter_form.non_field_errors }}
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script>
+    (() => {
+      const slides = document.querySelector('.testimonial-slides');
+      const prev   = document.getElementById('testi-prev');
+      const next   = document.getElementById('testi-next');
+
+      // Auto-slide every 5 seconds
+      let interval = setInterval(() => moveNext(), 5000);
+
+      function moveNext(){
+        slides.appendChild(slides.firstElementChild);
+      }
+      function movePrev(){
+        slides.insertBefore(slides.lastElementChild, slides.firstElementChild);
+      }
+
+      next.addEventListener('click', () => {
+        clearInterval(interval);
+        moveNext();
+        interval = setInterval(moveNext, 5000);
+      });
+      prev.addEventListener('click', () => {
+        clearInterval(interval);
+        movePrev();
+        interval = setInterval(moveNext, 5000);
+      });
+    })();
+
+    // If the popup overlay is open, allow closing it via the “Close” button
+    document.addEventListener("DOMContentLoaded", function() {
+      const overlay = document.getElementById("send-popup-overlay");
+      const closeBtn = document.getElementById("send-popup-close");
+      if (overlay.classList.contains("open") && closeBtn) {
+        closeBtn.addEventListener("click", () => {
+          overlay.classList.remove("open");
+        });
+        // Also allow clicking outside the popup to close
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            overlay.classList.remove("open");
+          }
+        });
+      }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+
+<body>
+  <!-- Sidebar toggle button -->
+  <button id="Hamburger" class="Hamburger" aria-label="Open sidebar">
+    &#9776;
+  </button>
+
+  <!-- Sidebar itself -->
+  <aside id="sidebar">
+    <button id="close-btn" class="close-btn" aria-label="Close sidebar">
+      ×
+    </button>
+    <h3 style="color: var(--omi-neon-pink); text-shadow: 0 0 4px var(--omi-neon-pink);">
+      Menu
+    </h3>
+    <nav>
+      <ul style="list-style:none; padding:0;">
+        <li><a href="{% url 'products:product_list' %}" style="color: var(--omi-neon-blue);">Products</a></li>
+        <li><a href="{% url 'cart:cart_detail' %}"    style="color: var(--omi-neon-blue);">Cart</a></li>
+        <li><a href="{% url 'orders:order_create' %}" style="color: var(--omi-neon-blue);">Checkout</a></li>
+        <li><a href="{% url 'diagnostics:request_list' %}" style="color: var(--omi-neon-blue);">Diagnostics</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Your “main” wrapper around the products grid -->
+  <main class="main">
+    <!-- ... your products markup here ... -->
+  </main>
+
+  <script>
+    const hamburger = document.getElementById('Hamburger');
+    const sidebar   = document.getElementById('sidebar');
+    const closeBtn  = document.getElementById('close-btn');
+
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.add('open');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+    });
+  </script>
+</body>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/review_list.css' %}">
+{% endblock %}
+
+{% block title %}All Reviews{% endblock %}
+
+{% block content %}
+<h2>Reviews</h2>
+<ul>
+  {% for review in reviews %}
+    <li>{{ review.product.title }} – {{ review.rating }}/5 by {{ review.user.username }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/review_list.js' %}" defer></script>
+{% endblock %}

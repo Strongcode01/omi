@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+  <section class="section">
+    <h2 style="color:var(--omi-neon-pink)">Thanks, {{ name }}!</h2>
+    <p>We’ve received your message and will be in touch soon.</p>
+    <a href="{% url 'pages:home' %}" class="button" style="background:var(--omi-neon-blue);">
+      Back to Home
+    </a>
+  </section>
+{% endblock %}

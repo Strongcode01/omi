@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/product_form.css' %}">
+{% endblock %}
+
+{% block title %}{{ form.instance.pk|yesno:"Edit Product,Add New Product" }}{% endblock %}
+
+{% block content %}
+  <h2>{{ form.instance.pk|yesno:"Edit Product,Add New Product" }}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+      {{ form.category.label_tag }}
+      {{ form.category }}
+    </div>
+
+    <div>
+      {{ form.subcategory.label_tag }}
+      {{ form.subcategory }}
+    </div>
+
+    <div>
+      {{ form.species.label_tag }}
+      {{ form.species }}
+    </div>
+
+    <div>
+      {{ form.title.label_tag }}
+      {{ form.title }}
+    </div>
+
+    <div>
+      {{ form.description.label_tag }}
+      {{ form.description }}
+    </div>
+
+    <div>
+      {{ form.size.label_tag }}
+      {{ form.size }}
+    </div>
+
+    <div>
+      {{ form.price.label_tag }}
+      {{ form.price }}
+    </div>
+
+    <div>
+      {{ form.pond_type.label_tag }}
+      {{ form.pond_type }}
+    </div>
+
+    <div>
+      {{ form.health_status.label_tag }}
+      {{ form.health_status }}
+    </div>
+
+    <div>
+      {{ form.treatment_recommendation.label_tag }}
+      {{ form.treatment_recommendation }}
+      <small class="help-text">{{ form.treatment_recommendation.help_text }}</small>
+    </div>
+
+    <div>
+      {{ form.image.label_tag }}
+      {{ form.image }}
+    </div>
+
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/product_form.js' %}" defer></script>
+{% endblock %}

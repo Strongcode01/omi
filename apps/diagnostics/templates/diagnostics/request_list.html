@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/request_list.css' %}">
+{% endblock %}
+
+{% block title %}My Diagnostics Requests{% endblock %}
+
+{% block content %}
+<h2>Diagnostic Requests</h2>
+<a href="{% url 'diagnostics:request_create' %}">New Request</a>
+<ul>
+  {% for req in requests %}
+    <li><a href="{% url 'diagnostics:request_detail' req.pk %}">#{{ req.id }}</a> – {{ req.get_status_display }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/request_list.js' %}" defer></script>
+{% endblock %}

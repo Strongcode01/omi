@@ -1,0 +1,451 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <style>
+    /* ==================================
+       Contact Page Styling (from original)
+       ================================== */
+
+    .slide-inner {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    .slide-img {
+      width: 400px;
+      height: 300px;
+      overflow: hidden;
+      flex: 1;
+      padding: 2rem 0 1rem 3rem;
+      margin: 1rem 0 0 1rem;
+    }
+    .slide-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      border-radius: 10px;
+    }
+    .slide-content {
+      flex: 1;
+      padding: 2rem;
+      background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3));
+      color: var(--omi-text-strong);
+    }
+    .slide-content h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      background: none;
+      font-family: league-spartan;
+    }
+    .slide-content p {
+      font-size: 1.125rem;
+      margin-bottom: 2.5rem;
+    }
+    .btn-omi {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--omi-button);
+      color: var(--omi-text-strong);
+      border: 0.4px solid var(--omi-neon-blue);
+      border-radius: 15px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .btn-omi:hover {
+      background: var(--omi-neon-blue);
+      border-color: var(--omi-neon-pink);
+    }
+
+    .contact-info, .secondary-info {
+      display: grid;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .secondary-info {
+      padding: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    }
+    .contact-info {
+      background-color: var(--omi-neon-blue);
+      padding: 1.5rem;
+      min-width: 280px;
+      min-height: 40vh;
+      grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+    }
+    .info-card {
+      background: rgba(0,0,0,0.7);
+      border: 0px solid var(--omi-neon-blue);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 240px;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+    }
+    .info-card img {
+      width: 48px;
+      margin-bottom: 1rem;
+    }
+    .info-card h3 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .info-card p {
+      color: var(--omi-text-strong);
+      font-size: 0.9rem;
+      margin: 0;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Popup overlay (hidden by default) */
+    #contact-popup-overlay {
+      position: fixed;
+      inset: 0; /* top:0; right:0; bottom:0; left:0; */
+      background: rgba(0,0,0,0.6);
+      display: none; /* shown only when 'open' class is added */
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+    #contact-popup-overlay.open {
+      display: flex;
+    }
+    #contact-popup {
+      background: var(--omi-dark-bg);
+      border: 2px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+      color: var(--omi-text-strong);
+    }
+    #contact-popup h3 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 6px var(--omi-neon-pink);
+    }
+    #contact-popup button {
+      background: var(--omi-neon-blue);
+      color: #000;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 6px var(--omi-neon-blue);
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    #contact-popup button:hover {
+      background: var(--omi-neon-pink);
+      box-shadow: 0 0 8px var(--omi-neon-pink);
+      transform: translateY(-2px);
+    }
+
+    /* Contact form styling (rename wrapper to .contact-form) */
+    .contact-form {
+      max-width: 500px;
+      margin: 2rem auto 4rem;
+      background: rgba(0,0,0,0.6);
+      padding: 1.5rem;
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      color: var(--omi-text-strong);
+    }
+    .contact-form h2 {
+      color: var(--omi-neon-pink);
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-shadow: 0 0 6px var(--omi-neon-pink);
+    }
+    .contact-form label {
+      display: block;
+      color: var(--omi-neon-pink);
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1.5rem;
+      background: #111;
+      color: var(--omi-text-strong);
+      border: 1px solid var(--omi-d-blue);
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--omi-neon-blue);
+      box-shadow: 0 0 6px var(--omi-neon-blue);
+    }
+    .contact-form button {
+      background: var(--omi-neon-blue);
+      color: #000;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+    }
+    .contact-form button:hover {
+      background: var(--omi-button);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+    .error-message {
+      color: #ff135d;
+      font-size: 0.9rem;
+      margin-top: -0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Newsletter */
+    .newsletter {
+      background: var(--omi-d-blue);
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .newsletter h2 {
+      color: rgb(255, 194, 209);
+      margin-bottom: 2rem;
+    }
+    .newsletter input {
+      padding: 0.75rem;
+      width: 300px;
+      max-width: 90%;
+      border-radius: 4px;
+      border: 1px solid var(--omi-neon-blue);
+      margin-right: 1rem;
+      background: #111;
+      color: var(--omi-text-strong);
+    }
+    .newsletter button {
+      background: rgb(49, 0, 34);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 0 8px var(--omi-neon-pink);
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .newsletter button:hover {
+      background: var(--omi-button);
+      box-shadow: 0 0 12px var(--omi-neon-blue);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+    .social-icons a {
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 48px;
+      color: var(--omi-text-strong);
+      font-size: 1.2rem;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .social-icons a:hover {
+      background: var(--omi-neon-pink);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+    }
+  </style>
+{% endblock %}
+
+{% block title %}Contact Us | OMI{% endblock %}
+
+{% block content %}
+  {# ========================
+     Popup Overlay (hidden unless sent=True)
+     ======================== #}
+  <div id="contact-popup-overlay" class="{% if sent %}open{% endif %}">
+    <div id="contact-popup">
+      <h3>Thank You!</h3>
+      <p>Your contact request has been sent successfully.</p>
+      <button id="contact-popup-close">Close</button>
+    </div>
+  </div>
+
+  {# ================
+     Hero Section
+     ================ #}
+  <section class="slider">
+    <div class="omi-hero-slider swiper-container">
+      <div class="swiper-wrapper">
+        <!-- Single Slide -->
+        <div class="swiper-slide">
+          <div class="slide-inner">
+            <div class="slide-img">
+              <img src="{% static 'images/slide1.jpg' %}" alt="Hero Image">
+            </div>
+            <div class="slide-content">
+              <h1>Contact Us</h1>
+              <p>Reach out to us for Business Inquiries and Support.</p>
+              <a href="#contact-form" class="btn-omi">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ================================
+     Primary Contact Info Section
+     ================================ #}
+  <section class="contact-info">
+    <div class="info-card">
+      <img src="{% static 'images/email-icon.png' %}" alt="Email">
+      <h3>Email Us</h3>
+      <p>support@optimalmarket.com</p>
+    </div>
+    <div class="info-card">
+      <img src="{% static 'images/phone-icon.png' %}" alt="Phone">
+      <h3>Call Us</h3>
+      <p>+234 708 867 7699</p>
+    </div>
+    <div class="info-card">
+      <img src="{% static 'images/location-icon.png' %}" alt="Address">
+      <h3>Our Office</h3>
+      <p>12 Aquatic Drive, Asaba, Nigeria</p>
+    </div>
+  </section>
+
+  {# ================================
+     Contact Form Section
+     ================================ #}
+  <section id="contact-form">
+    <div class="contact-form">
+      <h2>Send us a Message</h2>
+      <form action="{% url 'pages:contact_submit' %}" method="post">
+        {% csrf_token %}
+        {{ contact_form.non_field_errors }}
+
+        <label for="id_name">Name</label>
+        {{ contact_form.name }}
+        {% for error in contact_form.name.errors %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_email">Email</label>
+        {{ contact_form.email }}
+        {% for error in contact_form.email.errors %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_phone">Phone</label>
+        {{ contact_form.phone }}
+        {% for error in contact_form.phone.errors %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_usertype">User Type</label>
+        {{ contact_form.usertype }}
+        {% for error in contact_form.usertype.errors %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_message">Message</label>
+        {{ contact_form.message }}
+        {% for error in contact_form.message.errors %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <button type="submit" class="btn-submit">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  {# ================================
+     Newsletter Signup Section
+     ================================ #}
+  <section class="newsletter">
+    <h2>Join Our Newsletter</h2>
+    <form method="post" action="{% url 'pages:newsletter' %}" style="display:flex; justify-content:center; gap:0.5rem;">
+      {% csrf_token %}
+      <input type="email" name="newsletter_email" placeholder="Your email address">
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  {# =========================================
+     Secondary Contact Info & Socials Section
+     ========================================= #}
+  <section class="secondary-info">
+    <div class="info-card">
+      <img src="{% static 'images/phone-icon.png' %}" alt="Phone">
+      <p>+234 708 867 7699</p>
+    </div>
+    <div class="info-card">
+      <img src="{% static 'images/location-icon.png' %}" alt="Address">
+      <p>12 Aquatic Drive, Lagos, Nigeria</p>
+    </div>
+    <div class="info-card">
+      <img src="{% static 'images/email-icon.png' %}" alt="Email">
+      <p>support@optimalmarketinnovations.com</p>
+    </div>
+  </section>
+
+  {# ================================
+     Social Media Icons Section
+     ================================ #}
+  <div class="social-icons">
+    <a href="#"><img src="{% static 'images/social/facebook.svg' %}" alt="Facebook"></a>
+    <a href="#"><img src="{% static 'images/social/instagram.svg' %}" alt="Instagram"></a>
+    <a href="#"><img src="{% static 'images/social/x.svg' %}" alt="Twitter"></a>
+    <a href="#"><img src="{% static 'images/social/whatsapp.svg' %}" alt="WhatsApp"></a>
+    <a href="#"><img src="{% static 'images/social/youtube.svg' %}" alt="YouTube"></a>
+    <a href="#"><img src="{% static 'images/social/pinterest.svg' %}" alt="Pinterest"></a>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const overlay = document.getElementById("contact-popup-overlay");
+      const closeBtn = document.getElementById("contact-popup-close");
+      if (overlay && closeBtn && overlay.classList.contains("open")) {
+        closeBtn.addEventListener("click", () => overlay.classList.remove("open"));
+        overlay.addEventListener("click", e => {
+          if (e.target === overlay) {
+            overlay.classList.remove("open");
+          }
+        });
+      }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/request_detail.css' %}">
+{% endblock %}
+
+{% block title %}Request #{{ request_obj.id }}{% endblock %}
+
+{% block content %}
+<h2>Request #{{ request_obj.id }}</h2>
+<p>Status: {{ request_obj.get_status_display }}</p>
+<p>Sample Info: {{ request_obj.sample_info }}</p>
+{% if request_obj.result %}
+  <h3>Result</h3>
+  <p>{{ request_obj.result }}</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/request_detail.js' %}" defer></script>
+{% endblock %}

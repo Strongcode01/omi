@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+
+{% block title %}Products{% endblock %}
+{% block extra_css %}
+  {{ block.super }}
+  <style>
+    .omi-search-btn {
+      background: var(--omi-button);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #fff;
+      box-shadow: 0 0 6px var(--omi-d-neon-blue);
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .omi-search-btn:hover {
+      background: var(--omi-neon-pink);
+      box-shadow: 0 0 10px var(--omi-neon-pink);
+      transform: translateY(-2px);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<!-- Search Bar -->
+<form method="get" action="" style="
+  display:block;
+  max-width:400px;
+  margin-bottom:2rem;
+  float:right;
+  gap:0.5rem;
+">
+  <input
+    type="text" name="q" value="{{ q }}"
+    placeholder="Search products..."
+    style="
+      width: calc(100% - 110px);
+      padding:0.5rem;
+      border:1px solid var(--omi-neon-pink);
+      border-radius:4px;
+      background:#111;
+      color:var(--omi-text-strong);
+    ">
+  <button type="submit" class="omi-search-btn">
+    Search
+  </button>
+</form>
+
+<ul class="products-grid" style="
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;
+  list-style:none;
+  padding:0;
+  margin:0;
+">
+  {% for product in products %}
+    <!-- existing li card -->
+  {% empty %}
+    <p style="color:var(--omi-text-strong); text-align: center;">No products found.</p>
+  {% endfor %}
+</ul>
+
+<h2 class="page-title">Products</h2>
+
+<!-- product listing -->
+<ul class="products-grid">
+  {% for product in products %}
+    <li class="product-item">
+      <a href="{% url 'products:product_detail' product.pk %}" class="product-link">
+        {% if product.image %}
+          <img
+            src="{{ product.image.url }}"
+            alt="{{ product.title }}"
+            class="product-image">
+        {% endif %}
+        <h3 class="product-title">{{ product.title }}</h3>
+      </a>
+      <p class="product-price">₦{{ product.price }}</p>
+      <a
+        href="{% url 'cart:cart_add' product.pk %}"
+        class="add-to-cart-btn"
+      >
+        Order Now
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/product_list.js' %}" defer></script>
+  <!-- 1) Swiper core JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <!-- 2) Your custom slider init script -->
+  <script src="{% static 'js/product_list.js' %}"></script>
+{% endblock %}

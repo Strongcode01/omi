@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/request_form.css' %}">
+{% endblock %}
+
+{% block title %}New Diagnostic Request{% endblock %}
+
+{% block content %}
+<h2>Submit Sample Info</h2>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit Request</button>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/request_form.js' %}" defer></script>
+{% endblock %}

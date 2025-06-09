@@ -1,0 +1,3 @@
+// Auto-fill city based on postal code (example)
+const postal = document.querySelector('#id_city');
+// ...custom logic here...

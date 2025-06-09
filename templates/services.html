@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <style>
+    /* Services Page Styling */
+    .slide-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  .slide-img {
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+    flex: 1;
+    padding: 2rem 0 1rem 3rem;
+    margin: 1rem 0 0 1rem;
+    
+  }
+  .slide-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 10px;
+  }
+  .slide-content {
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3));
+    color: var(--omi-text-strong);
+  }
+  .slide-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    background: none;
+    font-family: league-spartan;
+    
+  }
+  
+  .slide-content p {
+    font-size: 1.125rem;
+    margin-bottom: 2.5rem;
+  }
+  .btn-omi {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--omi-button);
+    color: var(--omi-text-strong);
+    border: 0.4px solid var(--omi-neon-blue);
+    border-radius: 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .btn-omi:hover {
+    background: var(--omi-neon-blue);
+    border-color: var(--omi-neon-pink);
+    }
+
+
+    .services-overview {
+      padding: 4rem 1rem;
+      max-width: 1000px; margin: 0 auto;
+      text-align: center;
+    }
+    .services-overview p {
+      color: var(--omi-text-strong);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 2rem;
+    }
+    .service-card {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+    }
+    .service-card img {
+      width: 80px;
+      margin-bottom: 1rem;
+    }
+    .service-card h3 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 0.5rem;
+    }
+    .service-card p {
+      color: var(--omi-text-strong);
+      font-size: 0.9rem;
+    }
+
+    .cta-section {
+      background: var(--omi-d-blue);
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .cta-section h2 {
+      color: var(--omi-neon-blue);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 6px var(--omi-neon-blue);
+      margin: 1rem 0 2rem 0;
+    }
+    .cta-section a.button {
+      background: var(--omi-neon-pink);
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      box-shadow: 0 0 8px var(--omi-neon-pink);
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      
+    }
+    .cta-section a.button:hover {
+      background: var(--omi-neon-blue);
+      box-shadow: 0 0 12px var(--omi-neon-blue);
+      transform: translateY(-2px);
+    }
+  </style>
+{% endblock %}
+
+{% block title %}Our Services | OMI{% endblock %}
+
+{% block content %}
+  <!-- Hero Section -->
+<section class="slider">
+    <div class="omi-hero-slider swiper-container">
+    <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+            <div class="slide-inner">
+                <div class="slide-img">
+                <img src="{% static 'images/slide1.jpg' %}" alt="Hero Image" />
+                </div>
+                <div class="slide-content">
+                <h1>Our Services</h1>
+                <p>The Best Practices and Services of Optimal Market Innovations.</p>
+                <!-- <a href="#contact" class="btn-omi">Learn More</a> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+  <!-- Overview -->
+  <section class="services-overview">
+    <p>
+      At Optimal Market Innovations, we offer end-to-end solutions for aquaculture and livestock stakeholders:
+      from broodstock sourcing and feed supply, to PCR diagnostics and data-driven analytics. Explore what we can do for you:
+    </p>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="services-overview">
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="{% static 'images/service-feed.png' %}" alt="Feed Supply">
+        <h3>Feed Supply</h3>
+        <p>Premium feeds and supplements tailored to every growth stage.</p>
+      </div>
+      <div class="service-card">
+        <img src="{% static 'images/service-diagnostics.png' %}" alt="PCR Diagnostics">
+        <h3>PCR Diagnostics</h3>
+        <p>On-site sampling & lab testing with actionable treatment plans.</p>
+      </div>
+      <div class="service-card">
+        <img src="{% static 'images/service-logistics.png' %}" alt="Logistics">
+        <h3>Logistics</h3>
+        <p>Same-day pickup & delivery across Nigeria for fresh stock.</p>
+      </div>
+      <div class="service-card">
+        <img src="{% static 'images/service-analytics.png' %}" alt="Data Analytics">
+        <h3>Analytics</h3>
+        <p>Dashboard insights and trend reports for premium subscribers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <h2>Ready to Get Started?</h2>
+    <a href="{% url 'pages:contact' %}" class="button">Contact Our Team</a>
+  </section>
+{% endblock %}
