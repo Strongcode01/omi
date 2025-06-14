@@ -6,4 +6,5 @@ django-crispy-forms
 django-money
 whitenoise
 Pillow
-
+requests
+uuid

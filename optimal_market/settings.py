@@ -133,4 +133,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 # Paystack keys (if needed in settings)
 PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY')
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
+PAYSTACK_CALLBACK_URL = os.getenv('PAYSTACK_PAYMENT_CALLBACK_URL')
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'products:product_list'
+
 

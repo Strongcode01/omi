@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+<!-- order_detail/html -->
+<!-- {% extends 'base.html' %}
 {% load static %}
 
 {% block extra_css %}
@@ -16,8 +17,38 @@
   {% endfor %}
 </ul>
 <p>Total: ₦{{ order.total }}</p>
-{% endblock %}
+{% endblock %} -->
+
+
+<!-- Add conditional content: Logic -->
+<!-- {% if order.status == 'P' %}
+  <p>Status: <strong style="color:orange;">Pending Payment</strong></p>
+  <a href="{% url 'orders:order_create' %}" class="btn">Retry Payment</a>
+{% elif order.status == 'PR' %}
+  <p>Status: <strong style="color:green;">Payment Received - Processing</strong></p>
+{% else %}
+  <p>Status: {{ order.get_status_display }}</p>
+{% endif %}
+
 
 {% block extra_js %}
   <script src="{% static 'js/order_detail.js' %}" defer></script>
+{% endblock %} -->
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Order #{{ order.pk }}</h2>
+  {% if order.paid %}
+    <p>Status: <strong style="color:green;">Paid & Processing</strong></p>
+  {% else %}
+    <p>Status: <strong style="color:orange;">Pending Payment</strong></p>
+    <a href="{% url 'orders:order_create' %}" class="btn">Pay Now</a>
+  {% endif %}
+
+  <ul>
+    {% for item in order.items.all %}
+      <li>{{ item.product.title }} ×{{ item.quantity }} – ₦{{ item.price }}</li>
+    {% endfor %}
+  </ul>
+  <p>Total: ₦{{ order.total }}</p>
 {% endblock %}

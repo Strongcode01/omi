@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pay for Order #{{ order.pk }}{% endblock %}
+
+{% block content %}
+<div style="text-align:center; padding:2rem; color:var(--omi-text-strong); background:var(--omi-dark-bg);">
+  <h2>Complete Payment for Order #{{ order.pk }}</h2>
+  <p>Total: ₦{{ order.total }}</p>
+  <button id="pay-button" style="
+    background:var(--omi-neon-blue);
+    color:#000; padding:1rem 2rem;
+    border:none; border-radius:4px;
+    box-shadow:0 0 8px var(--omi-neon-blue);
+    cursor:pointer;
+  ">Pay with Card</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+// Launch Paystack on button click
+document.getElementById('pay-button').onclick = function(e) {
+  var handler = PaystackPop.setup({
+    key: '{{ paystack_public_key }}',
+    email: '{{ form.cleaned_data.email }}',
+    amount: {{ order.total|floatformat:2 }} * 100,
+    currency: 'NGN',
+    ref: '{{ order.reference }}',
+    metadata: {
+      custom_fields: [
+        { display_name: "Full Name", value: "{{ form.cleaned_data.full_name }}" },
+        { display_name: "Phone",     value: "{{ form.cleaned_data.phone }}"     }
+      ]
+    },
+    callback: function(response) {
+      // On success, redirect to our callback URL
+      window.location.href = "{% url 'orders:payment_callback' %}?reference=" + response.reference;
+    },
+    onClose: function() {
+      alert('Payment cancelled.');
+      window.location.href = "{% url 'orders:order_detail' order.pk %}";
+    }
+  });
+  handler.openIframe();
+};
+</script>
+{% endblock %}
