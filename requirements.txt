@@ -8,4 +8,3 @@ whitenoise
 Pillow
 requests
 uuid
-
