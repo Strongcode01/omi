@@ -1,54 +1,95 @@
-<!-- order_detail/html -->
-<!-- {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/order_detail.css' %}">
+  <style>
+    .order-detail {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(0,0,0,0.6);
+      padding: 2rem;
+      border: 1px solid var(--omi-neon-blue);
+      border-radius: 8px;
+      color: var(--omi-text-strong);
+    }
+    .order-detail h2 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 1rem;
+    }
+    .order-items li {
+      margin-bottom: 0.5rem;
+    }
+    .payment-status {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .payment-status.pending {
+      background: #33001a;
+      border: 1px solid var(--omi-neon-pink);
+      color: var(--omi-neon-pink);
+    }
+    .payment-status.success {
+      background: #001a00;
+      border: 1px solid var(--omi-neon-blue);
+      color: var(--omi-neon-blue);
+    }
+    .btn-pay-now {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--omi-neon-blue);
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .btn-pay-now:hover {
+      background: var(--omi-neon-pink);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+    }
+  </style>
 {% endblock %}
 
 {% block title %}Order #{{ order.id }}{% endblock %}
 
 {% block content %}
-<h2>Order #{{ order.id }}</h2>
-<p>Status: {{ order.get_status_display }}</p>
-<ul>
-  {% for item in order.items.all %}
-    <li>{{ item.product.title }} x{{ item.quantity }} – ₦{{ item.price }}</li>
-  {% endfor %}
-</ul>
-<p>Total: ₦{{ order.total }}</p>
-{% endblock %} -->
+<div class="order-detail">
+  <h2>Order #{{ order.id }}</h2>
+  <p>Placed on: {{ order.created_at|date:"M d, Y H:i" }}</p>
+  <p>Status: <strong>{{ order.get_status_display }}</strong></p>
 
-
-<!-- Add conditional content: Logic -->
-<!-- {% if order.status == 'P' %}
-  <p>Status: <strong style="color:orange;">Pending Payment</strong></p>
-  <a href="{% url 'orders:order_create' %}" class="btn">Retry Payment</a>
-{% elif order.status == 'PR' %}
-  <p>Status: <strong style="color:green;">Payment Received - Processing</strong></p>
-{% else %}
-  <p>Status: {{ order.get_status_display }}</p>
-{% endif %}
-
-
-{% block extra_js %}
-  <script src="{% static 'js/order_detail.js' %}" defer></script>
-{% endblock %} -->
-
-{% extends 'base.html' %}
-{% block content %}
-  <h2>Order #{{ order.pk }}</h2>
-  {% if order.paid %}
-    <p>Status: <strong style="color:green;">Paid & Processing</strong></p>
-  {% else %}
-    <p>Status: <strong style="color:orange;">Pending Payment</strong></p>
-    <a href="{% url 'orders:order_create' %}" class="btn">Pay Now</a>
-  {% endif %}
-
-  <ul>
+  <h3>Items</h3>
+  <ul class="order-items">
     {% for item in order.items.all %}
-      <li>{{ item.product.title }} ×{{ item.quantity }} – ₦{{ item.price }}</li>
+      <li>{{ item.product.title }} &times; {{ item.quantity }} — ₦{{ item.price }}</li>
     {% endfor %}
   </ul>
-  <p>Total: ₦{{ order.total }}</p>
+
+  <p><strong>Total:</strong> ₦{{ order.total }}</p>
+
+  {# Payment Section #}
+  {% if payment %}
+    {% if payment.verified %}
+      <div class="payment-status success">
+        ✔️ Payment of ₦{{ payment.amount|floatformat:-2 }} received.
+      </div>
+    {% else %}
+      <div class="payment-status pending">
+        ⚠️ Payment pending. You still owe ₦{{ payment.amount|floatformat:-2 }}.
+        <br>
+        <a href="{% url 'orders:make_payment' payment.ref %}" class="btn-pay-now">
+          Pay Now
+        </a>
+      </div>
+    {% endif %}
+  {% else %}
+    {# In case no Payment record exists (shouldn’t happen under normal flow) #}
+    <div class="payment-status pending">
+      ⚠️ No payment record found. Please <a href="{% url 'orders:order_create' %}">place your order</a> again.
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

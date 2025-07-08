@@ -60,7 +60,7 @@
   <header class="header">
     <div class="header-columns">
       <div class="header-column">
-        <img src="{% static 'images/omi_logo_rounded.png' %}" alt="Optimal Market Logo" class="header-logo">
+        <img src="{% static 'images/omi_logo_rounded.png' %}" alt="Optimal Market Logo" class="header-logo" height="150px" width="150px">
       </div>
       <nav class="header-column">
         <ul>
@@ -81,7 +81,17 @@
         {% endif %} 
           <li><a href="{% url 'cart:cart_detail' %}">🛒</a>|</li>
         </ul>
+        <button id="cart-open" style="
+        position: fixed; top:1rem; right:1rem;
+        background: var(--omi-neon-blue); border:none;
+        color:#000; padding:0.5rem 1rem; border-radius:4px;
+        box-shadow:0 0 6px var(--omi-neon-blue); cursor:pointer;
+        z-index:1000;
+      ">
+      Cart
+    </button>
       </div>
+      
     </div>
     
   </header>

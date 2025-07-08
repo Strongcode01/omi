@@ -289,9 +289,9 @@
 {% block title %}Contact Us | OMI{% endblock %}
 
 {% block content %}
-  {# ========================
+  <!-- {# ========================
      Popup Overlay (hidden unless sent=True)
-     ======================== #}
+     ======================== #} -->
   <div id="contact-popup-overlay" class="{% if sent %}open{% endif %}">
     <div id="contact-popup">
       <h3>Thank You!</h3>
@@ -300,9 +300,9 @@
     </div>
   </div>
 
-  {# ================
+  <!-- {# ================
      Hero Section
-     ================ #}
+     ================ #} -->
   <section class="slider">
     <div class="omi-hero-slider swiper-container">
       <div class="swiper-wrapper">
@@ -323,9 +323,9 @@
     </div>
   </section>
 
-  {# ================================
+  <!-- # ================================
      Primary Contact Info Section
-     ================================ #}
+     ================================ # -->
   <section class="contact-info">
     <div class="info-card">
       <img src="{% static 'images/email-icon.png' %}" alt="Email">
@@ -344,9 +344,9 @@
     </div>
   </section>
 
-  {# ================================
+  <!-- {# ================================
      Contact Form Section
-     ================================ #}
+     ================================ #} -->
   <section id="contact-form">
     <div class="contact-form">
       <h2>Send us a Message</h2>
@@ -389,9 +389,9 @@
     </div>
   </section>
 
-  {# ================================
+  <!-- {# ================================
      Newsletter Signup Section
-     ================================ #}
+     ================================ #} -->
   <section class="newsletter">
     <h2>Join Our Newsletter</h2>
     <form method="post" action="{% url 'pages:newsletter' %}" style="display:flex; justify-content:center; gap:0.5rem;">
@@ -401,9 +401,9 @@
     </form>
   </section>
 
-  {# =========================================
+  <!-- {# =========================================
      Secondary Contact Info & Socials Section
-     ========================================= #}
+     ========================================= #} -->
   <section class="secondary-info">
     <div class="info-card">
       <img src="{% static 'images/phone-icon.png' %}" alt="Phone">
@@ -419,9 +419,9 @@
     </div>
   </section>
 
-  {# ================================
+  <!-- {# ================================
      Social Media Icons Section
-     ================================ #}
+     ================================ #} -->
   <div class="social-icons">
     <a href="#"><img src="{% static 'images/social/facebook.svg' %}" alt="Facebook"></a>
     <a href="#"><img src="{% static 'images/social/instagram.svg' %}" alt="Instagram"></a>

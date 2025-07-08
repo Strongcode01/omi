@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  .payment-page {
+    background: var(--omi-dark-bg);
+    color: var(--omi-text-strong);
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+  .payment-icon {
+    font-size: 4rem;
+    color: var(--omi-neon-blue);
+    margin-bottom: 1rem;
+  }
+  .payment-details {
+    margin-bottom: 2rem;
+  }
+  .btn-pay {
+    background: var(--omi-neon-blue);
+    color: #000;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 0 8px var(--omi-neon-blue);
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .btn-pay:hover {
+    background: var(--omi-neon-pink);
+    box-shadow: 0 0 12px var(--omi-neon-pink);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-page">
+  <div class="payment-icon">
+    🛒✔️
+  </div>
+  <h2>Complete Payment</h2>
+  <p class="payment-details">
+    You are about to pay ₦{{ payment.amount|floatformat:-2 }}  
+    for Order #{{ order.id }}.
+  </p>
+  <button onclick="payWithPaystack()" class="btn-pay">Make Payment</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+function payWithPaystack() {
+  var handler = PaystackPop.setup({
+    key: '{{ paystack_pub_key }}',
+    email: '{{ payment.email }}',
+    amount: '{{ payment.amount }}',      // kobo
+    ref: '{{ payment.ref }}',
+    callback: function(response){
+      window.location.href = "{% url 'orders:verify_payment' payment.ref %}";
+    },
+    onClose: function(){
+      alert('Payment popup closed.');
+    }
+  });
+  handler.openIframe();
+}
+</script>
+{% endblock %}

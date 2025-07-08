@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from apps.products.models import Product
+import secrets
 
 # Create your models here.
 
@@ -33,3 +34,17 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+class Payment(models.Model):
+    order     = models.OneToOneField(Order, related_name='payment', on_delete=models.CASCADE)
+    ref       = models.CharField(max_length=100, unique=True, default=secrets.token_urlsafe)
+    amount    = models.PositiveIntegerField()  # in kobo (ngn * 100)
+    email     = models.EmailField()
+    verified  = models.BooleanField(default=False)
+    created   = models.DateTimeField(auto_now_add=True)
+
+    def amount_kobo(self):
+        return self.amount
+
+    def __str__(self):
+        return f"Payment {self.ref} for Order {self.order.id}"

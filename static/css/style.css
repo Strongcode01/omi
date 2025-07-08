@@ -14,8 +14,8 @@
 
 /* Fallback if CSS vars unsupported */
 body {
-  background-color: var(--omi-dark-bg, #1b001b);
-  color: var(--omi-text-strong, #ffe2f6);
+  background-color: var(--omi-dark-bg, #fff);
+  color: var(--omi-text-strong, rgb(20, 0, 22));
   max-width: 100%;
 }
 /* .main {
@@ -23,12 +23,7 @@ body {
 } */
 
 header .header-columns {
-  background: linear-gradient(
-    30deg,
-    var(--omi-d-neon-pink),
-    var(--omi-d-blue),
-    var(--omi-neon-pink)
-  );
+  background: #fff;
   box-shadow: 0 0 20px var(--omi-neon-blue);
   max-height: 25vh;
 }
@@ -71,7 +66,7 @@ ul.products-grid li p {
 }
 
 .hero, footer {
-  background: radial-gradient(
+  background: (
     circle at center,
     var(--omi-neon-blue) 0%,
     var(--omi-dark-bg)    70%

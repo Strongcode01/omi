@@ -1,176 +1,116 @@
-<!-- checkout.html -->
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
-  <style>
-    :root {
-      --omi-neon-blue:    #00ade7;
-      --omi-d-blue:       #001a6f;
-      --omi-neon-pink:    #c4006c;
-      --omi-d-neon-pink:  #6a0069;
-      --omi-dark-bg:      #000;
-      --omi-text-strong:  #fce6ff;
-      --omi-button:       #2c012b;
-    }
-
-    .checkout-container {
-      display: flex;
-      justify-content: center;
-      padding: 2rem;
-      background-color: var(--omi-dark-bg);
-      color: var(--omi-text-strong);
-      border-radius: 10px;
-      
-    }
-
-    .checkout-box {
-      background-color:#200020;;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1000px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px var(--omi-d-neon-pink);
-    }
-
-    .checkout-box h2 {
-      text-align: center;
-      color: rgb(253, 236, 255);
-      margin-bottom: 1.5rem;
-    }
-
-    form {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      border-radius: 15px;
-      width: 80vw;
-    }
-
-    @media (min-width: 768px) {
-      form {
-        grid-template-columns: 1fr 1fr;
-      }
-      form .full-width {
-        grid-column: 1 / -1;
-      }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      padding: 0 10px 0 10px;
-      margin: 0 10px 0 10px;
-    }
-
-    .form-group label {
-      margin-bottom: 0.3rem;
-      font-weight: bold;
-      color: var(--omi-d-blue);
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 0.6rem;
-      border: 1px solid var(--omi-neon-pink);
-      border-radius: 4px;
-      background: rgba(75, 0, 82, 0.3);
-      color: var(--omi-text-strong);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: 2px solid var(--omi-neon-blue);
-    }
-
-    .btn-place-order {
-      grid-column: 1 / -1;
-      padding: 0.8rem;
-      background: var(--omi-d-blue);
-      color: #ffffff;
-      font-weight: bold;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.5s;
-      display: block;       
-      width: 50%;           
-      margin: 2rem auto 0;
-    }
-
-    .btn-place-order:hover {
-      background: var(--omi-button);
-      color: #fff;
-    }
-  </style>
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<style>
+  :root {
+    --omi-neon-blue:    #00ade7;
+    --omi-d-blue:       #001a6f;
+    --omi-neon-pink:    #c4006c;
+    --omi-d-neon-pink:  #6a0069;
+    --omi-dark-bg:      #000;
+    --omi-text-strong:  #fce6ff;
+    --omi-button:       #2c012b;
+  }
+  .untree_co-section { background: var(--omi-dark-bg); color: var(--omi-text-strong); }
+  .checkout-form, .order-summary {
+    background: rgba(0,0,0,0.6);
+    padding: 2rem;
+    border: 1px solid var(--omi-neon-blue);
+    border-radius: 8px;
+    box-shadow: 0 0 8px var(--omi-neon-pink);
+  }
+  .checkout-form h2, .order-summary h2 {
+    color: var(--omi-neon-pink);
+    margin-bottom: 1rem;
+  }
+  .form-group label { color: var(--omi-d-blue); font-weight:bold; }
+  .form-group input, .form-group select {
+    background: rgba(75,0,82,0.3);
+    color: var(--omi-text-strong);
+    border: 1px solid var(--omi-neon-pink);
+    border-radius:4px;
+    padding:0.6rem;
+  }
+  .btn-place-order {
+    background: var(--omi-neon-blue);
+    color: #000;
+    padding:1rem;
+    border:none;
+    border-radius:8px;
+    width:100%;
+    text-transform:uppercase;
+    cursor:pointer;
+    box-shadow:0 0 6px var(--omi-neon-blue);
+    transition:background 0.3s;
+  }
+  .btn-place-order:hover { background: var(--omi-button); }
+  .order-summary table { width:100%; }
+  .order-summary th, .order-summary td { padding:0.75rem; color:var(--omi-text-strong); }
+  .order-summary .total-row td { font-weight:bold; }
+</style>
 {% endblock %}
 
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<div class="checkout-container">
-  <div class="checkout-box">
-    <h2>Checkout</h2>
+<div class="untree_co-section before-footer-section">
+  <div class="container">
     <form method="post">
       {% csrf_token %}
-      {# Billing Details #}
-      <div class="form-group">
-        <label for="id_full_name">Full Name</label>
-        {{ form.full_name }}
-      </div>
-      <div class="form-group">
-        <label for="id_email">Email Address</label>
-        {{ form.email }}
-      </div>
-      <div class="form-group">
-        <label for="id_phone">Phone Number</label>
-        {{ form.phone }}
-      </div>
+      <div class="row mb-5">
+        <!-- Billing Details -->
+        <div class="col-md-6 checkout-form">
+          <h2>Billing Details</h2>
+          {% for field in form %}
+            <div class="form-group">
+              {{ field.label_tag }}
+              {{ field }}
+              {% for err in field.errors %}
+                <div style="color:#ff135d;">{{ err }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn-place-order">Proceed to Payment</button>
+        </div>
 
-      {# Shipping Address #}
-      <div class="form-group">
-        <label for="id_address_line1">Address Line 1</label>
-        {{ form.address_line1 }}
-      </div>
-      <div class="form-group">
-        <label for="id_address_line2">Address Line 2</label>
-        {{ form.address_line2 }}
-      </div>
-      <div class="form-group">
-        <label for="id_house">House no.</label>
-        {{form.house_no}}
-      </div>
-      <div class="form-group">
-        <label for="id_city">City</label>
-        {{ form.city }}
-      </div>
-      <div class="form-group">
-        <label for="id_postcode">Postal Code</label>
-        {{ form.postcode }}
-      </div>
+      <!-- inside order summary column -->
+        <h2 class="h3 mb-3 text-black">Your Order Summary</h2>
+        <div class="p-3 p-lg-5 border bg-white order-summary">
+        <table class="table site-block-order-table mb-5">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>
+                  {{ item.product.title }}
+                  <strong class="mx-2">×</strong>{{ item.quantity }}
+                </td>
+                <td>₦{{ item.subtotal|floatformat:0 }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2">Your cart is empty.</td>
+              </tr>
+            {% endfor %}
+            <tr class="total-row">
+              <td class="text-black font-weight-bold">Order Total</td>
+              <td class="text-black font-weight-bold">
+                ₦{{ cart_total|floatformat:0 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
 
-      {# Payment Method (full width) #}
-      <div class="form-group full-width">
-        <label for="id_payment_method">Payment Method</label>
-        {{ form.payment_method }}
       </div>
-
-      {# Order Notes (full width) #}
-      <div class="form-group full-width">
-        <label for="id_notes">Order Notes</label>
-        {{ form.notes }}
-      </div>
-
-      <button type="submit" class="btn-place-order">Place Order</button>
     </form>
   </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-  <script src="{% static 'js/checkout.js' %}" defer></script>
 {% endblock %}

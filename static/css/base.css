@@ -1,6 +1,9 @@
 /* base.css */
 /* style for header */
     /* make a 3-column grid for the main footer content */
+.header {
+  background-color: #fff;
+}
 .header .header-columns {
   display: grid;
   grid-template-columns: 200px 1fr 0.7fr;

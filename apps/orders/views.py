@@ -1,8 +1,10 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
-from .models import Order, OrderItem
+
+from apps.orders.paystack import Paystack
+from .models import Order, OrderItem, Payment
 from .forms import CheckoutForm
 from apps.cart.views import _get_cart
 from apps.products.models import Product
@@ -15,23 +17,32 @@ from django.contrib.auth.decorators import login_required
 
 # @login_required(login_url='accounts:login')
 def order_create(request):
-    cart = _get_cart(request)
-    if not cart:
-        messages.info(request, "Your cart is empty.")
+    # 1. Fetch raw cart data and prepare items + total for summary
+    raw_cart = _get_cart(request)  # e.g. {'1': 2, '5': 1}
+    if not raw_cart:
         return redirect('products:product_list')
 
+    items = []
+    cart_total = 0
+    for pid, qty in raw_cart.items():
+        product = Product.objects.get(pk=pid)
+        subtotal = product.price * qty
+        items.append({
+            'product':  product,
+            'quantity': qty,
+            'subtotal': subtotal,
+        })
+        cart_total += subtotal
+
+    # 2. Handle form submission
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            # 1. Create order and items
-            order = Order.objects.create(
-                user=request.user,
-                total=0,
-                reference='',
-                paid=False
-            )
+            cd = form.cleaned_data
+            # Create Order
+            order = Order.objects.create(user=request.user, total=0)
             total = 0
-            for pid, qty in cart.items():
+            for pid, qty in raw_cart.items():
                 product = Product.objects.get(pk=pid)
                 OrderItem.objects.create(
                     order=order,
@@ -40,24 +51,63 @@ def order_create(request):
                     price=product.price
                 )
                 total += product.price * qty
-
             order.total = total
-            order.reference = f"{order.pk}_{uuid4().hex}"
             order.save()
-            # 2. Clear cart
+
+            # Clear cart
             request.session['cart'] = {}
 
-            # 3. Render payment page
-            return render(request, 'orders/payment.html', {
-                'order': order,
-                'form': form,
-                'paystack_public_key': settings.PAYSTACK_PUBLIC_KEY,
-            })
+            # Create Payment record
+            pay = Payment.objects.create(
+                order=order,
+                amount=int(total * 100),  # amount in kobo
+                email=cd['email']
+            )
+
+            # Redirect to Paystack checkout page
+            return redirect('orders:make_payment', ref=pay.ref)
     else:
         form = CheckoutForm()
 
-    return render(request, 'orders/checkout.html', {'form': form})
+    # 3. Render the checkout page — always include items + cart_total
+    return render(request, 'orders/checkout.html', {
+        'form':       form,
+        'items':      items,
+        'cart_total': cart_total,
+    })
+def make_payment(request, ref):
+    """
+    Show the “Make Payment” page with Paystack inline JS.
+    """
+    payment = get_object_or_404(Payment, ref=ref)
+    order   = payment.order
+    context = {
+        'order': order,
+        'payment': payment,
+        'paystack_pub_key': settings.PAYSTACK_PUBLIC_KEY,
+    }
+    return render(request, 'orders/make_payment.html', context)
 
+def verify_payment(request, ref):
+    """
+    Called by Paystack callback. Verifies then shows thank-you.
+    """
+    payment = get_object_or_404(Payment, ref=ref)
+    success, data = Paystack().verify_payment(ref)
+    if success and data.get('amount') == payment.amount:
+        payment.verified = True
+        payment.save()
+        # optionally update order.status
+        order = payment.order
+        order.status = 'PR'
+        order.save()
+        messages.success(request, "Payment successful!")
+        return render(request, 'orders/thankyou.html', {
+            'order': order,
+            'payment': payment
+        })
+    messages.error(request, "Payment verification failed.")
+    return redirect('orders:order_detail', pk=payment.order.pk)
 
 # Callback view
 @csrf_exempt
@@ -106,5 +156,15 @@ def paystack_webhook(request):
 
 
 def order_detail(request, pk):
-    order = Order.objects.prefetch_related('items__product').get(pk=pk)
-    return render(request, 'orders/order_detail.html', {'order': order})
+    # Fetch order and its items
+    order = get_object_or_404(
+        Order.objects.prefetch_related('items__product', 'payment'),
+        pk=pk
+    )
+    # Grab the one‑to‑one Payment if it exists
+    payment = getattr(order, 'payment', None)
+
+    return render(request, 'orders/order_detail.html', {
+        'order':   order,
+        'payment': payment,
+    })
