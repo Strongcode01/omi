@@ -1,3 +1,4 @@
+# optimal_market/urls.py
 """
 URL configuration for optimal_market project.
 
@@ -25,14 +26,14 @@ from apps.pages.views import home
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('', include('apps.pages.urls')),
-    # path('', include(('apps.pages.urls', 'pages'), namespace='pages')),
+    path('', include('apps.pages.urls', namespace='pages')),
     path('accounts/', include('apps.accounts.urls')),
     path('products/', include('apps.products.urls')),
     path('cart/', include('apps.cart.urls')),
     path('orders/', include('apps.orders.urls')),
     path('reviews/', include('apps.reviews.urls')),
     path('diagnostics/', include('apps.diagnostics.urls')),
+    path('payments/', include('apps.payments.urls', namespace='payments')),
 ]
 if settings.DEBUG:
     # serve user-uploaded media

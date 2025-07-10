@@ -2,115 +2,222 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<link rel="stylesheet" href="{% static 'orders/css/checkout.css' %}">
 <style>
   :root {
-    --omi-neon-blue:    #00ade7;
-    --omi-d-blue:       #001a6f;
-    --omi-neon-pink:    #c4006c;
-    --omi-d-neon-pink:  #6a0069;
-    --omi-dark-bg:      #000;
-    --omi-text-strong:  #fce6ff;
-    --omi-button:       #2c012b;
+    --primary:    #1f0030;
+    --primary-d:  #006fa3;
+    --accent:     #ff135d;
+    --bg-page:    #e1ebff;
+    --bg-card:    #d2d2d2;
+    --text:       #18031f;
+    --radius:     8px;
+    --shadow:     0 4px 12px rgba(0,0,0,0.05);
+    --gap:        1.5rem;
   }
-  .untree_co-section { background: var(--omi-dark-bg); color: var(--omi-text-strong); }
-  .checkout-form, .order-summary {
-    background: rgba(0,0,0,0.6);
+
+  .checkout-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap);
+    padding: 3rem 1rem;
+    background: var(--bg-page);
+  }
+
+  /* Left card twice as wide/tall as right */
+  .billing-details { flex: 2 1 500px; }
+  .order-summary   { flex: 1 1 300px; }
+
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
     padding: 2rem;
-    border: 1px solid var(--omi-neon-blue);
-    border-radius: 8px;
-    box-shadow: 0 0 8px var(--omi-neon-pink);
+    color: var(--text);
   }
-  .checkout-form h2, .order-summary h2 {
-    color: var(--omi-neon-pink);
-    margin-bottom: 1rem;
+
+  .checkout-title {
+    margin: 0 0 1.5rem;
+    color: var(--primary);
+    font-size: 1.5rem;
+    text-align: center;
   }
-  .form-group label { color: var(--omi-d-blue); font-weight:bold; }
-  .form-group input, .form-group select {
-    background: rgba(75,0,82,0.3);
-    color: var(--omi-text-strong);
-    border: 1px solid var(--omi-neon-pink);
-    border-radius:4px;
-    padding:0.6rem;
+
+  /* Use CSS grid for the form */
+  .billing-details form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: var(--gap);
   }
+
+  /* Full-width fields span both columns */
+  .form-full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  .form-group .form-control {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  /* Place order button spans both columns */
   .btn-place-order {
-    background: var(--omi-neon-blue);
-    color: #000;
-    padding:1rem;
-    border:none;
-    border-radius:8px;
-    width:100%;
-    text-transform:uppercase;
-    cursor:pointer;
-    box-shadow:0 0 6px var(--omi-neon-blue);
-    transition:background 0.3s;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: var(--gap);
+    padding: 0.85rem 2rem;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.4s;
   }
-  .btn-place-order:hover { background: var(--omi-button); }
-  .order-summary table { width:100%; }
-  .order-summary th, .order-summary td { padding:0.75rem; color:var(--omi-text-strong); }
-  .order-summary .total-row td { font-weight:bold; }
+  .btn-place-order:hover {
+    background: var(--primary-d);
+  }
+
+  /* Order summary table styling */
+  .order-summary table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .order-summary th,
+  .order-summary td {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .order-summary th { text-align: left; font-weight: 600; }
+  .total-row td {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .checkout-container {
+      flex-direction: column;
+      padding: 2rem 1rem;
+    }
+    .billing-details form {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 {% endblock %}
 
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<div class="untree_co-section before-footer-section">
-  <div class="container">
+<div class="checkout-container">
+
+  <!-- Left: Billing & Payment -->
+  <div class="card billing-details">
+    <h2 class="checkout-title">CHECKOUT</h2>
     <form method="post">
       {% csrf_token %}
-      <div class="row mb-5">
-        <!-- Billing Details -->
-        <div class="col-md-6 checkout-form">
-          <h2>Billing Details</h2>
-          {% for field in form %}
-            <div class="form-group">
-              {{ field.label_tag }}
-              {{ field }}
-              {% for err in field.errors %}
-                <div style="color:#ff135d;">{{ err }}</div>
-              {% endfor %}
-            </div>
-          {% endfor %}
-          <button type="submit" class="btn-place-order">Proceed to Payment</button>
-        </div>
 
-      <!-- inside order summary column -->
-        <h2 class="h3 mb-3 text-black">Your Order Summary</h2>
-        <div class="p-3 p-lg-5 border bg-white order-summary">
-        <table class="table site-block-order-table mb-5">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in items %}
-              <tr>
-                <td>
-                  {{ item.product.title }}
-                  <strong class="mx-2">×</strong>{{ item.quantity }}
-                </td>
-                <td>₦{{ item.subtotal|floatformat:0 }}</td>
-              </tr>
-            {% empty %}
-              <tr>
-                <td colspan="2">Your cart is empty.</td>
-              </tr>
-            {% endfor %}
-            <tr class="total-row">
-              <td class="text-black font-weight-bold">Order Total</td>
-              <td class="text-black font-weight-bold">
-                ₦{{ cart_total|floatformat:0 }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-
+      {# Full-width fields #}
+      <div class="form-group form-full">
+        {{ form.full_name.label_tag }}
+        {{ form.full_name }}
+        {% for err in form.full_name.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
       </div>
+      <div class="form-group form-full">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {% for err in form.email.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group form-full">
+        {{ form.street_address.label_tag }}
+        {{ form.street_address }}
+        {% for err in form.street_address.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+
+      {# Two-column fields #}
+      <div class="form-group">
+        {{ form.phone.label_tag }}
+        {{ form.phone }}
+        {% for err in form.phone.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        {% for err in form.city.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.postcode.label_tag }}
+        {{ form.postcode }}
+        {% for err in form.postcode.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.address_line2.label_tag }}
+        {{ form.address_line2 }}
+        {% for err in form.address_line2.errors %}
+          <div class="error-message">{{ err }}</div>
+        {% endfor %}
+      </div>
+
+      {# Payment method & notes full width #}
+      <div class="form-group form-full">
+        {{ form.payment_method.label_tag }}
+        {{ form.payment_method }}
+      </div>
+      <div class="form-group form-full">
+        {{ form.notes.label_tag }}
+        {{ form.notes }}
+      </div>
+
+      <button type="submit" class="btn-place-order">Place Order</button>
     </form>
   </div>
+
+  <!-- Right: Order Summary -->
+  <div class="card order-summary">
+    <h2 class="checkout-title">YOUR ORDER</h2>
+    <table>
+      <thead>
+        <tr><th>Product</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.product.title }} × {{ item.quantity }}</td>
+            <td>₦{{ item.subtotal|floatformat:0 }}</td>
+          </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td><strong>Total</strong></td>
+          <td><strong>₦{{ cart_total|floatformat:0 }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 {% endblock %}

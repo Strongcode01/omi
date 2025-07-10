@@ -1,109 +1,9 @@
+<!-- apps/accounts/templates/accounts/signup.html -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/signup.css' %}">
-<style>
-  :root {
-    --omi-neon-blue:    #00ade7;
-    --omi-d-blue:       #001a6f;
-    --omi-neon-pink:    #ff135d;
-    --omi-d-neon-pink:  #6a0069;
-    --omi-dark-bg:      #000;
-    --omi-text-strong:  #fce6ff;
-    --omi-button:       #2c012b;
-  }
-
-  .signup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-    background: var(--omi-dark-bg);
-    padding: 2rem;
-  }
-
-  .form {
-    width: 100%;
-    max-width: 360px;
-    background: #270f26;
-    padding: 2.5rem 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(106,0,105,0.7);
-    color: var(--omi-text-strong);
-    font-family: "Inter", sans-serif;
-  }
-
-  .form span {
-    display: block;
-    text-align: center;
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--omi-neon-pink);
-    margin-bottom: 1.5rem;
-  }
-
-  .form input[type="text"],
-  .form input[type="email"],
-  .form input[type="password"] {
-    width: 100%;
-    padding: 0.75rem 1rem 1rem 0;
-    margin: 1rem 2rem 1rem 0;
-    border: none;
-    border-radius: 6px;
-    background: rgba(75,0,82,0.4);
-    color: var(--omi-text-strong);
-    font-size: 1rem;
-
-  }
-
-  .form .newsletter-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  .form input[type="checkbox"] {
-    margin-right: 0.5rem;
-    accent-color: var(--omi-neon-pink);
-    border: 1px solid var(--omi-neon-blue);
-  }
-  .form label[for="form-checkbox"] {
-    color: var(--omi-text-strong);
-    font-size: 0.95rem;
-  }
-
-  .form button {
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 1rem;
-    font-weight: 600;
-    background: var(--omi-d-neon-blue);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .form button:hover {
-    background: var(--omi-button);
-    color: #fff;
-  }
-
-  .form p {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-  .form p a {
-    color: var(--omi-neon-blue);
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.2s;
-  }
-  .form p a:hover {
-    color: var(--omi-neon-pink);
-  }
-</style>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 {% endblock %}
 
 {% block title %}Sign Up{% endblock %}
@@ -112,15 +12,66 @@
 <div class="signup-container">
   <form class="form" method="post" action="{% url 'accounts:signup' %}">
     {% csrf_token %}
-    <span>Sign Up</span>
-    <input type="text" name="full_name" placeholder="Full Name" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password1" placeholder="Password" required>
-    <input type="password" name="password2" placeholder="Confirm Password" required>
+    <span>Register</span>
 
-    <div class="newsletter-section">
-      <input id="form-checkbox" type="checkbox" name="newsletter">
-      <label for="form-checkbox">Receive Weekly Emails</label>
+    {# Display non-field errors #}
+    {% if form.non_field_errors %}
+      <div class="error-message">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+      
+    {# Full name #}
+    <div class="input-group">
+      {{ form.fullname.label_tag }}
+      {{ form.fullname }}
+      {% for err in form.fullname.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
+    </div>
+    {# Username #}
+    <div class="input-group">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+      {% for err in form.username.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
+    </div>
+
+    {# Email #}
+    <div class="input-group">
+      {{ form.email.label_tag }}
+      {{ form.email }}
+      {% for err in form.email.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
+    </div>
+
+    {# Phone #}
+    <div class="input-group">
+      {{ form.phone.label_tag }}
+      {{ form.phone }}
+      {% for err in form.phone.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
+    </div>
+
+    {# Password #}
+    <div class="input-group">
+      {{ form.password1.label_tag }}
+      {{ form.password1 }}
+      {% for err in form.password1.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
+    </div>
+
+    {# Confirm Password #}
+    <div class="input-group">
+      {{ form.password2.label_tag }}
+      {{ form.password2 }}
+      {% for err in form.password2.errors %}
+        <div class="error-message">{{ err }}</div>
+      {% endfor %}
     </div>
 
     <button type="submit">Sign Up</button>
@@ -134,5 +85,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/signup.js' %}" defer></script>
+  <script src="{% static 'js/signup.js' %}" defer></script>
 {% endblock %}

@@ -1,4 +1,4 @@
-# settings.py
+# optimal_market/settings.py
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'apps.orders',
     'apps.reviews',
     'apps.diagnostics',
-    'apps.pages'
+    'apps.pages',
+    'apps.payments',
 ]
 
 MIDDLEWARE = [

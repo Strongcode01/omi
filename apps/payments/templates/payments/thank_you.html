@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/thank_you.css' %}">
+  <style>
+    .thank-you {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: var(--omi-dark-bg);
+      color: var(--omi-text-strong);
+    }
+    .thank-you h2 {
+      color: var(--omi-neon-pink);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 6px var(--omi-neon-pink);
+    }
+    .thank-you p {
+      font-size: 1.125rem;
+      margin-bottom: 1.5rem;
+    }
+    .btn-home, .btn-view-order {
+      display: inline-block;
+      margin: 0.5rem;
+      background: var(--omi-neon-blue);
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      box-shadow: 0 0 8px var(--omi-neon-blue);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .btn-home:hover, .btn-view-order:hover {
+      background: var(--omi-dark-bg);
+      color: var(--omi-text-strong);
+      box-shadow: 0 0 12px var(--omi-neon-pink);
+    }
+  </style>
+{% endblock %}
+
+{% block title %}Thank You{% endblock %}
+
+{% block content %}
+  <div class="thank-you">
+    <h2>Thank You!</h2>
+    <p>Your order has been placed successfully. We’ll send you confirmation shortly.</p>
+    <a href="{% url 'pages:home' %}" class="btn-home">
+      Back to Home
+    </a>
+    <a href="{% url 'orders:order_detail' payment.order.id %}" class="btn-view-order">
+      View Your Order
+    </a>
+  </div>
+{% endblock %}

@@ -6,15 +6,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}OMI Marketplace{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
   {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
   <link rel="stylesheet" href="{% static 'css/cart_detail.css' %}">
   {% endblock %}
-
+  
+  {% block extra_script %}
+  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+  {%  endblock %}
 </head>
 
 <body>
@@ -56,45 +59,65 @@
     ">
     Cart
   </button>
-
-  <header class="header">
-    <div class="header-columns">
-      <div class="header-column">
-        <img src="{% static 'images/omi_logo_rounded.png' %}" alt="Optimal Market Logo" class="header-logo" height="150px" width="150px">
-      </div>
-      <nav class="header-column">
-        <ul>
-          <li><a href="{% url 'pages:home' %}">Home</a> |</li>
-          <li><a href="{% url 'products:product_list' %}">Products</a> |</li>
-          <li><a href="{% url 'pages:services' %}">Services</a> |</li>
-          <li><a href="{% url 'pages:contact_us' %}">Contact</a> </li>
-        </ul> 
-      </nav>
-
-      <div class="header-column">
-        {% if user.is_authenticated %}
-        <ul>
-          <li><a href="{% url 'accounts:logout' %}">↪</a>|</li>
-        {% else %}
-          <li><a href="{% url 'accounts:login' %}">Login</a> |</li>
-          <li><a href="{% url 'accounts:signup' %}">Register</a>|</li>
-        {% endif %} 
-          <li><a href="{% url 'cart:cart_detail' %}">🛒</a>|</li>
-        </ul>
-        <button id="cart-open" style="
-        position: fixed; top:1rem; right:1rem;
-        background: var(--omi-neon-blue); border:none;
-        color:#000; padding:0.5rem 1rem; border-radius:4px;
-        box-shadow:0 0 6px var(--omi-neon-blue); cursor:pointer;
-        z-index:1000;
-      ">
-      Cart
-    </button>
-      </div>
+  <div class="sub-header">
+  <div class="sub-columns">
+    <!-- Col 1: contact info -->
+    <div class="sub-contact">
+      <span>Call: +234 708 867 7699</span>
+      <span>Email: support@optimalmarket.com</span>
+    </div>
+    <!-- Col 2: user links + social icons -->
+    <div class="sub-actions">
+      <a href="#"><i class="fab fa-facebook-f">F</i></a>
+      <a href="#"><i class="fab fa-instagram">IG</i></a>
+      <a href="#"><i class="fab fa-whatsapp">WA</i></a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">Login</a>
+        <a href="{% url 'accounts:signup' %}">Register</a>
+      {% endif %}
       
     </div>
+  </div>
+</div>
+
+
+
+  <header class="header">
+  <div class="header-columns">
+
+    <!-- Left: main navigation -->
+    <nav class="nav-links">
+      <ul>
+        <li><a href="{% url 'pages:home' %}">Home</a></li>
+        <li><a href="{% url 'products:product_list' %}">Products</a></li>
+        <li><a href="{% url 'pages:services' %}">Services</a></li>
+        <li><a href="{% url 'pages:contact_us' %}">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Center: logo -->
+    <div class="logo-container">
+      <a href="{% url 'pages:home' %}">
+        <img src="{% static 'images/omi_logo_rounded.png' %}"
+             alt="OMI Logo"
+             class="header-logo"
+             width="120"
+             height="120">
+      </a>
+    </div>
+    <nav class="nav-links">
+      <ul>
+        <li><a href="{% url 'products:product_list' %}">Categories</a></li>
+        <li><a href="{% url 'pages:services' %}">Diagnostics</a></li>
+        <li><a href="{% url 'pages:contact_us' %}">Farm Management</a></li>
+      </ul>
+    </nav> 
     
-  </header>
+
+  </div>
+</header>
   {% include 'includes/sidebar.html' %}
   <main>
     {% block content %}{% endblock %}

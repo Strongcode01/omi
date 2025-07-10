@@ -1,0 +1,147 @@
+/* static/css/header.css */
+
+/*───────────────────────────────────────────────────────────────────────────
+  Variables
+───────────────────────────────────────────────────────────────────────────*/
+:root {
+  --omi-dark-bg:      #000;
+  --omi-neon-blue:    #00ade7;
+  --omi-neon-pink:    #ff135d;
+  --sub-bg:           rgba(84, 2, 119, 0.9);
+  --main-bg:          rgba(40, 0, 50, 0.85);
+  --text-light:       #fff;
+  --gap:              1rem;
+  --accent:      var(--omi-neon-blue);
+  --accent-hover: var(--omi-neon-pink);
+}
+/*───────────────────────────────────────────────────────────────────────────
+  Sub‑Header
+  Two right‑aligned columns: [contact][user+social]
+───────────────────────────────────────────────────────────────────────────*/
+
+.sub-header {
+  background: var(--sub-bg);
+  color: var(--text-light);
+  position: static;
+  z-index: 1100;
+}
+
+.sub-header .sub-columns {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;    /* push both columns to the right */
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  gap: var(--gap);
+  font-size: 0.9rem;
+}
+
+/* Column 1: Contact Info */
+.sub-header .sub-contact {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Column 2: User Links + Social Icons */
+.sub-header .sub-actions {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Links in both columns */
+.sub-header a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sub-header a:hover {
+  color: var(--accent-hover);
+}
+
+/* Small icon styling (e.g. FontAwesome) */
+.sub-header i {
+  font-size: 1rem;
+}
+/*───────────────────────────────────────────────────────────────────────────
+  2. Main Header
+  Sticky, semi‑transparent, center logo, plain white nav.
+───────────────────────────────────────────────────────────────────────────*/
+header.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--main-bg);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+}
+
+header .header-columns {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  gap: var(--gap);
+}
+
+/* Nav Links */
+.nav-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  color: var(--text-light);
+  background: none;
+  box-shadow: none;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--omi-neon-blue);
+  text-decoration: underline;
+}
+
+/* Logo Centering */
+.logo-container {
+  justify-self: center;
+}
+
+.logo-container a {
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.logo-container img {
+  max-height: 100px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* User / Cart Links */
+.user-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.user-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.user-links a:hover {
+  color: var(--omi-neon-pink);
+}

@@ -1,13 +1,8 @@
 from django.urls import path
-from .views import order_create, order_detail, make_payment, verify_payment, payment_callback, paystack_webhook
+from .views import order_create, order_detail
 
 app_name = 'orders'
-
 urlpatterns = [
     path('create/', order_create, name='order_create'),
     path('<int:pk>/', order_detail, name='order_detail'),
-    # path('callback/', payment_callback, name='payment_callback'),
-    # path('webhook/', paystack_webhook, name='paystack_webhook'),
-    path('pay/<str:ref>/', make_payment, name='make_payment'),
-    path('verify/<str:ref>/', verify_payment, name='verify_payment'),
 ]

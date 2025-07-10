@@ -58,7 +58,7 @@ function payWithPaystack() {
     amount: '{{ payment.amount }}',      // kobo
     ref: '{{ payment.ref }}',
     callback: function(response){
-      window.location.href = "{% url 'orders:verify_payment' payment.ref %}";
+      window.location.href = "{% url 'payments:verify_payment' payment.ref %}";
     },
     onClose: function(){
       alert('Payment popup closed.');

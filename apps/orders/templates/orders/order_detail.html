@@ -24,6 +24,12 @@
       padding: 1rem;
       border-radius: 6px;
       text-align: center;
+      font-size: 1.1rem;
+    }
+    .payment-status.cod {
+      background: #004400;
+      border: 1px solid var(--omi-neon-blue);
+      color: var(--omi-neon-blue);
     }
     .payment-status.pending {
       background: #33001a;
@@ -64,32 +70,37 @@
   <h3>Items</h3>
   <ul class="order-items">
     {% for item in order.items.all %}
-      <li>{{ item.product.title }} &times; {{ item.quantity }} — ₦{{ item.price }}</li>
+      <li>{{ item.product.title }} × {{ item.quantity }} — ₦{{ item.price }}</li>
     {% endfor %}
   </ul>
 
   <p><strong>Total:</strong> ₦{{ order.total }}</p>
 
   {# Payment Section #}
-  {% if payment %}
-    {% if payment.verified %}
-      <div class="payment-status success">
-        ✔️ Payment of ₦{{ payment.amount|floatformat:-2 }} received.
-      </div>
+  {% if order.payment_method == 'cod' %}
+    <div class="payment-status cod">
+      💵 Cash on Delivery selected. Please pay upon delivery.
+    </div>
+  {% else %}
+    {% if payment %}
+      {% if payment.verified %}
+        <div class="payment-status success">
+          ✔️ Payment of ₦{{ payment.amount|floatformat:-2 }} received.
+        </div>
+      {% else %}
+        <div class="payment-status pending">
+          ⚠️ Payment pending. You still owe ₦{{ payment.amount|floatformat:-2 }}.
+          <br>
+          <a href="{% url 'payments:make_payment' payment.ref %}" class="btn-pay-now">
+            Pay Now
+          </a>
+        </div>
+      {% endif %}
     {% else %}
       <div class="payment-status pending">
-        ⚠️ Payment pending. You still owe ₦{{ payment.amount|floatformat:-2 }}.
-        <br>
-        <a href="{% url 'orders:make_payment' payment.ref %}" class="btn-pay-now">
-          Pay Now
-        </a>
+        ⚠️ No payment record found. Please <a href="{% url 'orders:order_create' %}">place your order</a> again.
       </div>
     {% endif %}
-  {% else %}
-    {# In case no Payment record exists (shouldn’t happen under normal flow) #}
-    <div class="payment-status pending">
-      ⚠️ No payment record found. Please <a href="{% url 'orders:order_create' %}">place your order</a> again.
-    </div>
   {% endif %}
 </div>
 {% endblock %}

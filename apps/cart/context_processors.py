@@ -1,3 +1,4 @@
+# context_processors.py
 from .views import _get_cart
 from apps.products.models import Product
 
